@@ -1,0 +1,16 @@
+<!-- Il popup esiste solo quando è impostato l'ID di una connessione da visualizzare. -->
+@if (topo.detailConnection(); as c) {
+	<div class="back" (click)="close()">
+		<div class="card" (click)="$event.stopPropagation()">
+			<h3>Dettaglio connessione</h3>
+			<dl>
+				<!-- Mostra l'ID del cavo e gli ID dei due dispositivi collegati. -->
+				@for (r of rows(c); track r[0]) { <dt>{{ r[0] }}</dt><dd>{{ r[1] }}</dd> }
+			</dl>
+			<div class="btns">
+				<button class="del" (click)="topo.removeConnection(c.id)">Elimina connessione</button>
+				<button (click)="close()">Chiudi</button>
+			</div>
+		</div>
+	</div>
+}

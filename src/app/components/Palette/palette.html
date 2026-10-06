@@ -1,0 +1,20 @@
+<div class="row">
+	<!-- Il click arma un tipo; trascinare l'icona nel canvas crea il dispositivo. -->
+	@for (t of types; track t) {
+		<button class="tool" [class.on]="topo.armedType() === t" [attr.data-type]="t" draggable="true"
+						(click)="toggle(t)" (dragstart)="$event.dataTransfer?.setData('text/plain', t)">
+			<svg viewBox="0 0 64 64" width="44" height="44">
+				@switch (t) {
+					@case ('PC') { <use href="#icon-pc" /> }
+					@case ('Switch') { <use href="#icon-switch" /> }
+					@case ('Router') { <use href="#icon-router" /> }
+				}
+			</svg>
+			<span>{{ t }}</span>
+		</button>
+	}
+	<!-- Indicazione mostrata solo mentre un tipo è pronto per essere trascinato. -->
+	@if (topo.armedType(); as t) {
+		<div class="hint">Trascina l'icona <b>{{ t }}</b> all'interno del canvas per creare il dispositivo.</div>
+	}
+</div>

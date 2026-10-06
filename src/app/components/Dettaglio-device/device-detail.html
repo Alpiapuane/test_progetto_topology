@@ -1,0 +1,33 @@
+<!-- Il popup esiste solo quando è impostato l'ID di un dispositivo da visualizzare. -->
+@if (topo.detailDevice(); as d) {
+	<div class="back" (click)="close()">
+		<div class="card" (click)="$event.stopPropagation()">
+			<h3>Dettaglio dispositivo</h3>
+			@if (editing) {
+				<!-- In modifica si possono cambiare nome e IP mantenendo gli altri dati. -->
+				<form class="edit-form" (submit)="saveEdit($event, d)">
+					<label>Nome
+						<input type="text" [value]="editName" (input)="changeName($event)" required />
+					</label>
+					<label>IP
+						<input type="text" inputmode="decimal" [value]="editIp" (input)="changeIp($event)" required />
+					</label>
+					<div class="btns">
+						<button type="submit">Salva modifiche</button>
+						<button type="button" (click)="editing = false">Annulla</button>
+					</div>
+				</form>
+			} @else {
+				<dl>
+					<!-- Le righe cambiano in base al tipo; gli Switch includono le porte disponibili. -->
+					@for (r of rows(d); track r[0]) { <dt>{{ r[0] }}</dt><dd>{{ r[1] }}</dd> }
+				</dl>
+				<div class="btns">
+					<button (click)="startEdit(d)">Modifica</button>
+					<button class="del" (click)="topo.removeDevice(d.id)">Elimina dispositivo</button>
+					<button (click)="close()">Chiudi</button>
+				</div>
+			}
+		</div>
+	</div>
+}

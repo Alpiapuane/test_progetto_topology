@@ -1,0 +1,9 @@
+.back { position: fixed; inset: 0; background: #0f172a66; display: grid; place-items: center; z-index: 10; }
+.card { background: #fff; padding: 20px 24px; border-radius: 12px; min-width: 300px; }
+h3 { margin: 0 0 12px; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; }
+dt { font-weight: 600; }
+dd { margin: 0; }
+.btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+button { padding: 6px 12px; }
+.del { color: #b91c1c; }

@@ -1,0 +1,41 @@
+
+<div class="canvas-shell">
+	<!-- Controlli di zoom e attivazione dello spostamento della vista. -->
+	<div class="canvas-controls" aria-label="Controlli del canvas">
+		<button type="button" class="pan-toggle" [class.active]="panMode" [attr.aria-pressed]="panMode"
+				(click)="togglePan()" title="Attiva o disattiva lo spostamento del canvas">Pan</button>
+		<button type="button" (click)="zoomBy(1 / 1.2)" aria-label="Riduci zoom" title="Riduci zoom">−</button>
+		<span aria-live="polite">{{ zoom.toFixed(1) }}×</span>
+		<button type="button" (click)="zoomBy(1.2)" aria-label="Aumenta zoom" title="Aumenta zoom">+</button>
+		<button type="button" (click)="resetView()" title="Ripristina vista">Reset</button>
+	</div>
+	<!-- Il canvas accetta dispositivi trascinati e deseleziona quando si clicca sullo sfondo. -->
+	<svg #svg class="canvas" (dragover)="$event.preventDefault()" (drop)="onDrop($event)" (click)="onBackground($event)"
+		 (wheel)="onWheel($event)" (pointerdown)="beginPan($event)" (pointermove)="panMove($event)"
+		 (pointerup)="endPan()" (pointercancel)="endPan()">
+		<g [attr.transform]="'translate(' + panX + ' ' + panY + ') scale(' + zoom + ')'">
+	<!-- Ogni connessione ha una linea invisibile più larga per facilitare selezione e click destro. -->
+	@for (l of topo.lines(); track l.id) {
+		<line class="hit" [attr.x1]="l.x1" [attr.y1]="l.y1" [attr.x2]="l.x2" [attr.y2]="l.y2"
+					(click)="topo.selectConnection(l.id)" (contextmenu)="menuConnection($event, l.id)" />
+		<line class="cable" [class.sel]="l.id === topo.selectedConnectionId()"
+					[attr.x1]="l.x1" [attr.y1]="l.y1" [attr.x2]="l.x2" [attr.y2]="l.y2" />
+	}
+	<!-- I dispositivi gestiscono trascinamento, collegamento al click e apertura del dettaglio. -->
+	@for (d of topo.devices(); track d.id) {
+		<g class="dev" [class.sel]="d.id === topo.selectedDeviceId()" [attr.data-type]="d.type"
+			 [attr.transform]="'translate(' + d.x + ',' + d.y + ')'"
+			 (pointerdown)="down($event, d)" (pointermove)="move($event)" (pointerup)="up(d)"
+			 (contextmenu)="menu($event, d)">
+			<rect class="box" x="-44" y="-44" width="88" height="96" rx="10" />
+			@switch (d.type) {
+				@case ('PC') { <use href="#icon-pc" x="-28" y="-38" width="56" height="56" /> }
+				@case ('Switch') { <use href="#icon-switch" x="-28" y="-38" width="56" height="56" /> }
+				@case ('Router') { <use href="#icon-router" x="-28" y="-38" width="56" height="56" /> }
+			}
+			<text y="38" text-anchor="middle">{{ d.name }}</text>
+		</g>
+	}
+		</g>
+	</svg>
+</div>
